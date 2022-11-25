@@ -14,13 +14,43 @@ app.use(express.json())
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.xloqa3g.mongodb.net/?retryWrites=true&w=majority`;
-// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-// client.connect(err => {
-//   const collection = client.db("test").collection("devices");
-//   // perform actions on the collection object
-//   client.close();
-// });
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
+
+
+async function run() {
+    try {
+
+        const userCollections = client.db('katherGhor').collection('userCollection');
+
+        const productsCollections = client.db('katherGhor').collection('productsCollection');
+
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await userCollections.insertOne(user);
+            res.send(result);
+
+        })
+
+
+        app.post('/products', async (req, res) => {
+            const products = req.body;
+            const result = await productsCollections.insertOne(products);
+            res.send(result);
+
+        })
+        app.get('/products', async (req, res) => {
+            const query = {};
+            const products = await productsCollections.find(query).toArray();
+            res.send(products);
+        })
+
+    } finally {
+
+    }
+}
+
+run().catch(error => console.log(error))
 
 app.get('/', async (req, res) => {
     console.log(uri)
