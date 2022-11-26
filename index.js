@@ -50,6 +50,20 @@ async function run() {
             res.send(user);
         })
 
+        app.put('/users/seller/:id', async (req, res) => {
+
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    verify: 'verified'
+                }
+            }
+            const result = await userCollections.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        })
+
         // products
         app.post('/products', async (req, res) => {
             const products = req.body;
