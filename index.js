@@ -27,11 +27,27 @@ async function run() {
 
         const bookingsCollections = client.db('katherGhor').collection('bookingsCollections');
 
+        // Users
+
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await userCollections.insertOne(user);
             res.send(result);
 
+        })
+
+        app.get('/users', async (req, res) => {
+            const query = {};
+            const users = await userCollections.find(query).toArray();
+            res.send(users);
+        })
+
+
+        app.get('/users/:role', async (req, res) => {
+            const role = req.params.role;
+            const query = { role };
+            const user = await userCollections.find(query).toArray();
+            res.send(user);
         })
 
         // products
@@ -52,6 +68,20 @@ async function run() {
             const query = { _id: ObjectId(id) };
             const products = await productsCollections.findOne(query);
             res.send(products);
+        })
+
+        app.put('/products/:id', async (req, res) => {
+
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    report: 'reported'
+                }
+            }
+            const result = await productsCollections.updateOne(filter, updatedDoc, options);
+            res.send(result);
         })
 
         // Booking
