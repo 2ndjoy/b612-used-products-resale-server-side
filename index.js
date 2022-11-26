@@ -50,6 +50,15 @@ async function run() {
             res.send(user);
         })
 
+
+        app.get('/products/:report', async (req, res) => {
+            const report = req.params.report;
+            const query = { report };
+            const result = await productsCollections.find(query).toArray();
+            res.send(result);
+        })
+
+
         app.put('/users/seller/:id', async (req, res) => {
 
             const id = req.params.id;
@@ -107,10 +116,21 @@ async function run() {
         })
 
         app.get('/booking', async (req, res) => {
-            const query = {};
+            const email = req.query.email;
+            const query = { email: email };
             const booking = await bookingsCollections.find(query).toArray();
             res.send(booking);
         })
+
+        // 
+        app.get('/myproducts', async (req, res) => {
+            // const email = req.query.email;
+            const email = req.query.email;
+            const query = { email: email };
+            const myproducts = await productsCollections.find(query).toArray();
+            res.send(myproducts);
+        })
+
 
     } finally {
 
