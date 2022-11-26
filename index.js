@@ -59,6 +59,23 @@ async function run() {
         })
 
 
+
+        app.get('/products/reported', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const reported = await productsCollections.find(query).toArray();
+            res.send(reported);
+        })
+
+        app.get('/catagories/:productCategory', async (req, res) => {
+            const productCategory = req.params.productCategory;
+            const query = { productCategory };
+            const result = await productsCollections.find(query).toArray();
+            res.send(result);
+        })
+
+
+
         app.put('/users/seller/:id', async (req, res) => {
 
             const id = req.params.id;
