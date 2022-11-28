@@ -28,10 +28,7 @@ async function run() {
         const bookingsCollections = client.db('katherGhor').collection('bookingsCollections');
 
         const categoriesCollection = client.db('katherGhor').collection('categories');
-        // Do this today
-        // Make a new collection for reported item 
 
-        // Users
 
 
         // app.get('/jwt', async (req, res) => {
@@ -67,6 +64,13 @@ async function run() {
 
         })
 
+
+        app.get('/categories/:productCategory', async (req, res) => {
+            const productCategory = req.params.productCategory;
+            const query = { productCategory };
+            const result = await productsCollections.find(query).toArray();
+            res.send(result);
+        })
         // app.get('/products', async (req, res) => {
         //     const query = {};
         //     const result = await productsCollections.find(query).toArray();
@@ -169,12 +173,6 @@ async function run() {
         })
 
 
-        app.get('/categories/:productCategory', async (req, res) => {
-            const productCategory = req.params.productCategory;
-            const query = { productCategory };
-            const result = await productsCollections.find(query).toArray();
-            res.send(result);
-        })
 
         app.get('/category', async (req, res) => {
             const query = {};
@@ -182,6 +180,14 @@ async function run() {
             res.send(result);
 
         })
+
+        app.delete('/user/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await userCollections.deleteOne(query);
+            res.send(result);
+        })
+
 
 
 
@@ -217,6 +223,22 @@ async function run() {
             const result = await userCollections.updateOne(filter, updatedDoc, options);
             res.send(result);
         })
+
+
+        app.put('/users/:id', async (req, res) => {
+
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    role: 'admin'
+                }
+            }
+            const result = await userCollections.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        })
+
 
 
         // delete
