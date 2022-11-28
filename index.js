@@ -34,13 +34,13 @@ async function run() {
         // Users
 
 
-        app.get('/jwt', async (req, res) => {
-            const email = req.query.email;
-            const query = { email: email };
-            const user = await userCollections.findOne(query);
-            console.log(user);
-            res.send({ JJJ: "jjj" })
-        })
+        // app.get('/jwt', async (req, res) => {
+        //     const email = req.query.email;
+        //     const query = { email: email };
+        //     const user = await userCollections.findOne(query);
+        //     console.log(user);
+        //     res.send({ JJJ: "jjj" })
+        // })
 
         app.get('/user', async (req, res) => {
             const email = req.query.email;
@@ -66,20 +66,21 @@ async function run() {
             res.send(result);
 
         })
-        app.get('/products', async (req, res) => {
-            const query = {};
-            const result = await productsCollections.find(query).toArray();
-            res.send(result);
-
-        })
-
 
         // app.get('/products', async (req, res) => {
-        //     const email = req.query.email;
-        //     const query = { email: email };
-        //     const products = await productsCollections.find(query).toArray();
-        //     res.send(products)
+        //     const query = {};
+        //     const result = await productsCollections.find(query).toArray();
+        //     res.send(result);
+
         // })
+
+
+        app.get('/products', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const products = await productsCollections.find(query).toArray();
+            res.send(products)
+        })
 
 
         app.post('/booking', async (req, res) => {
@@ -118,6 +119,40 @@ async function run() {
             const result = await productsCollections.updateOne(filter, updatedDoc, options);
             res.send(result);
         })
+
+
+        app.put('/advertise/:id', async (req, res) => {
+
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    status: 'advertise'
+                }
+            }
+            const result = await productsCollections.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        })
+
+
+        app.put('/sold/:id', async (req, res) => {
+
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    status: 'sold'
+                }
+            }
+            const result = await productsCollections.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        })
+
+
+
+
         app.get('/products/:report', async (req, res) => {
             const report = req.params.report;
             const query = { report };
@@ -150,10 +185,13 @@ async function run() {
             const user = await userCollections.find(query).toArray();
             res.send(user);
         })
+        // myBuyyer
 
-        app.get('/buyer/:mybuyer', async (req, res) => {
-            const buyer = req.params.sellerEmail;
-            const query = { buyer };
+
+
+        app.get('/buyer/:sellerEmail', async (req, res) => {
+            const sellerEmail = req.params.sellerEmail;
+            const query = { sellerEmail };
             const buyers = await bookingsCollections.find(query).toArray();
             res.send(buyers);
         })
@@ -169,6 +207,15 @@ async function run() {
                 }
             }
             const result = await userCollections.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        })
+
+
+        // delete
+        app.delete('/products/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await productsCollections.deleteOne(query);
             res.send(result);
         })
 
