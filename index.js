@@ -83,6 +83,9 @@ async function run() {
         })
 
 
+
+
+
         app.post('/booking', async (req, res) => {
             const booking = req.body;
             const result = await bookingsCollections.insertOne(booking);
@@ -150,7 +153,12 @@ async function run() {
             res.send(result);
         })
 
-
+        app.get('/products/:status', async (req, res) => {
+            const status = req.params.status;
+            const query = { status };
+            const result = await productsCollections.find(query).toArray();
+            res.send(result);
+        })
 
 
         app.get('/products/:report', async (req, res) => {
